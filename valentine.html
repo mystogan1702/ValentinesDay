@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For My Valentine 💕</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Pacifico&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+
+body{
+height:100vh;
+background:linear-gradient(135deg,#ffd6e0,#f6c1ad);
+display:flex;
+justify-content:center;
+align-items:center;
+font-family:'Poppins',sans-serif;
+overflow:hidden;
+}
+
+/* Floating Hearts */
+.heart{
+position:fixed;
+bottom:-20px;
+animation:floatUp linear forwards;
+pointer-events:none;
+}
+@keyframes floatUp{
+from{transform:translateY(0);opacity:1;}
+to{transform:translateY(-110vh);opacity:0;}
+}
+
+/* Decorations */
+.decor{
+position:fixed;
+font-size:20px;
+animation:floatDecor 8s linear infinite;
+opacity:0.6;
+pointer-events:none;
+}
+@keyframes floatDecor{
+0%{transform:translateY(100vh) rotate(0deg);}
+100%{transform:translateY(-120vh) rotate(360deg);}
+}
+
+/* Tease box */
+#teaseBox{
+position:absolute;
+bottom:30px;
+text-align:center;
+width:100%;
+font-weight:600;
+color:#ff2e63;
+font-size:18px;
+min-height:40px;
+}
+#teaseBox img{
+margin-top:10px;
+width:120px;
+border-radius:15px;
+}
+
+/* Envelope */
+.wrapper{
+position:relative;
+width:360px;
+height:260px;
+perspective:1000px;
+}
+.envelope{
+position:absolute;
+width:100%;
+height:100%;
+background:#ff4d6d;
+border-radius:20px;
+box-shadow:0 20px 40px rgba(0,0,0,0.2);
+overflow:hidden;
+cursor:pointer;
+}
+.envelope:before{
+content:"";
+position:absolute;
+bottom:0;
+left:0;
+border-left:180px solid transparent;
+border-right:180px solid transparent;
+border-bottom:130px solid #ff758f;
+}
+.flap{
+position:absolute;
+top:0;
+left:0;
+border-left:180px solid transparent;
+border-right:180px solid transparent;
+border-top:130px solid #ff8fa3;
+transform-origin:top;
+transition:0.8s;
+z-index:3;
+}
+.open .flap{transform:rotateX(180deg);}
+
+/* Letter */
+.letter{
+position:absolute;
+bottom:-220px;
+left:5%;
+width:90%;
+height:200px;
+background:white;
+border-radius:20px;
+box-shadow:0 15px 30px rgba(0,0,0,0.2);
+padding:25px;
+text-align:center;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+transition:0.8s;
+}
+.open .letter{bottom:40px;}
+
+h1{
+font-family:'Pacifico',cursive;
+color:#ff4d6d;
+margin-bottom:10px;
+}
+.question{display:none;width:100%;}
+
+.buttons{
+position:relative;
+width:100%;
+height:70px;
+margin-top:15px;
+}
+
+button{
+padding:10px 25px;
+border:none;
+border-radius:25px;
+font-size:16px;
+cursor:pointer;
+transition:0.3s ease;
+white-space:nowrap;
+}
+
+#yesBtn{
+background:#ff4d6d;
+color:white;
+position:absolute;
+left:30%;
+top:50%;
+transform:translate(-50%,-50%) scale(1);
+box-shadow:0 5px 15px rgba(255,77,109,0.4);
+}
+
+#noBtn{
+background:#444;
+color:white;
+position:absolute;
+left:70%;
+top:50%;
+transform:translate(-50%,-50%) scale(1);
+}
+
+/* Gallery */
+.gallery{
+display:none;
+position:absolute;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+text-align:center;
+}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(3,150px);
+gap:25px;
+margin-top:20px;
+}
+
+/* Polaroids */
+.polaroid{
+background:white;
+padding:10px 10px 25px 10px;
+border-radius:10px;
+box-shadow:0 10px 25px rgba(0,0,0,0.2);
+transform:rotate(-3deg);
+transition:0.3s;
+}
+.polaroid:nth-child(even){transform:rotate(3deg);}
+.polaroid:hover{transform:scale(1.08) rotate(0deg);}
+.polaroid img{
+width:130px;
+height:130px;
+border-radius:8px;
+}
+.caption{
+margin-top:8px;
+font-weight:600;
+color:#ff4d6d;
+}
+
+/* Love Letter Popup */
+#loveLetter{
+position:fixed;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%) scale(0);
+width:500px;
+background:white;
+padding:30px;
+border-radius:20px;
+box-shadow:0 20px 40px rgba(0,0,0,0.3);
+text-align:center;
+z-index:999;
+transition:0.5s ease;
+}
+#loveLetter.show{
+transform:translate(-50%,-50%) scale(1);
+}
+#loveLetter h2{
+font-family:'Pacifico',cursive;
+color:#ff4d6d;
+margin-bottom:15px;
+}
+#closeLetter{
+margin-top:20px;
+padding:8px 20px;
+border:none;
+border-radius:20px;
+background:#ff4d6d;
+color:white;
+cursor:pointer;
+}
+</style>
+</head>
+
+<body>
+
+<div id="teaseBox"></div>
+
+<div class="wrapper" id="wrapper">
+<div class="envelope" onclick="openEnvelope()">
+<div class="flap"></div>
+
+<div class="letter">
+<h1>Hi Baby 💖</h1>
+<div class="question" id="question">
+<p>Will you be my Valentine?</p>
+<div class="buttons" id="buttonArea">
+<button id="yesBtn" onclick="yesClicked()">Yes 💕</button>
+<button id="noBtn" onclick="moveNo()">No 🥺</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="gallery" id="gallery">
+<h1>You said YES 🥰</h1>
+<div class="grid">
+<div class="polaroid"><img src="6.jpg"><div class="caption">Our Smile 💕</div></div>
+<div class="polaroid"><img src="5.jpg"><div class="caption">Cute Moment 😘</div></div>
+<div class="polaroid"><img src="3.jpg"><div class="caption">My Favorite 💖</div></div>
+<div class="polaroid"><img src="2.jpg"><div class="caption">Together 🥰</div></div>
+<div class="polaroid"><img src="4.jpg"><div class="caption">Always Us 💞</div></div>
+<div class="polaroid"><img src="1.jpg"><div class="caption">Forever 💍</div></div>
+</div>
+</div>
+
+<div id="loveLetter">
+<h2>My Babyyy 💌</h2>
+<p>Hiiii babyyy, I'm so thankful na dumating ka sa buhay ko, you made my world even brighter and thank you for loving me mahal ko! thank you for choosing me babyy koo out of so many guys out there ako yung napili mo hehe, I love you so much and I will always will whatever happens mamahalin kita ng buong buo the rest of my life and I want to show you and give you the love that you deserve babyyy. You're always be the prettiest mahal, Happy Valentines Iloveyou so muchhh❤️❤️ I wish you all the best Mwaaah💋💋</p>
+<button id="closeLetter" onclick="closeLetter()">Close 💕</button>
+</div>
+
+<script>
+let opened=false;
+let noClicks=0;
+let yesScale=1;
+
+const messages=[
+"Are you suuuuure? 🥺",
+"You really wanna break my heart? 💔",
+"Why you keep pressing Noo??😭",
+"You're too cute to say no 😤",
+"Stop pressing that 😡💕",
+"Love is chasing you 🏃‍♂️💖",
+"You can't escape destiny 😌",
+"Just press YES already 😘",
+"I'm crying now 😭",
+"Last chance!!! 😈💕"
+];
+
+const gifs=[
+"https://media.giphy.com/media/ROF8OQvDmxytW/giphy.gif",
+"https://media.giphy.com/media/3o6ZtaO9BZHcOjmErm/giphy.gif",
+"https://media.giphy.com/media/l378giAZgxPw3eO52/giphy.gif",
+"https://media.giphy.com/media/26ufcVAp3AiJJsrIs/giphy.gif",
+"https://media.giphy.com/media/9Y5BbDSkSTiY8/giphy.gif",
+"https://media.giphy.com/media/xT9IgG50Fb7Mi0prBC/giphy.gif",
+"https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExN3JmbXBzbHF2Yjkxa25sd3g0eHhocWFnZnBpd282cjc1NTc2d29kaiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/hhlTteBfqk3fMMFTIG/giphy.gif",
+"https://media.giphy.com/media/11sBLVxNs7v6WA/giphy.gif",
+"https://media.giphy.com/media/l1J9u3TZfpmeDLkD6/giphy.gif",
+"https://media.giphy.com/media/26AHONQ79FdWZhAI0/giphy.gif"
+];
+
+function openEnvelope(){
+if(opened) return;
+opened=true;
+document.getElementById("wrapper").classList.add("open");
+setTimeout(()=>{document.getElementById("question").style.display="block";},800);
+}
+
+function moveNo(){
+const btn=document.getElementById("noBtn");
+const area=document.getElementById("buttonArea");
+const yes=document.getElementById("yesBtn");
+const tease=document.getElementById("teaseBox");
+
+noClicks++;
+
+if(yesScale<1.4){
+yesScale+=0.05;
+yes.style.transform=`translate(-50%,-50%) scale(${yesScale})`;
+}
+
+const areaWidth=area.offsetWidth;
+const areaHeight=area.offsetHeight;
+const btnWidth=btn.offsetWidth;
+const btnHeight=btn.offsetHeight;
+
+const minX=areaWidth*0.55;
+const maxX=areaWidth-btnWidth;
+
+const randomX=Math.random()*(maxX-minX)+minX;
+const randomY=Math.random()*(areaHeight-btnHeight);
+
+btn.style.left=randomX+"px";
+btn.style.top=randomY+"px";
+
+let scale=1-noClicks*0.07;
+if(scale<0.4) scale=0.4;
+btn.style.transform=`scale(${scale})`;
+
+if(noClicks<=10){
+tease.innerHTML=`<div>${messages[noClicks-1]}</div><img src="${gifs[noClicks-1]}">`;
+}
+
+if(noClicks>=10){
+btn.style.display="none";
+yes.style.left="50%";
+yes.style.transform="translate(-50%,-50%) scale(1.5)";
+tease.innerHTML="<div>You can't escape love 😘💕</div>";
+}
+}
+
+function yesClicked(){
+document.getElementById("wrapper").style.display="none";
+document.getElementById("gallery").style.display="block";
+document.getElementById("loveLetter").classList.add("show");
+}
+
+function closeLetter(){
+document.getElementById("loveLetter").classList.remove("show");
+}
+
+/* Floating hearts */
+setInterval(()=>{
+const heart=document.createElement("div");
+heart.classList.add("heart");
+heart.innerHTML="💗";
+heart.style.left=Math.random()*100+"vw";
+heart.style.fontSize=(15+Math.random()*20)+"px";
+heart.style.animationDuration=(4+Math.random()*3)+"s";
+document.body.appendChild(heart);
+setTimeout(()=>heart.remove(),7000);
+},500);
+
+/* Decorative emojis */
+const emojis=["💖","🌹","💕","💘","💞"];
+setInterval(()=>{
+const decor=document.createElement("div");
+decor.classList.add("decor");
+decor.innerHTML=emojis[Math.floor(Math.random()*emojis.length)];
+decor.style.left=Math.random()*100+"vw";
+document.body.appendChild(decor);
+setTimeout(()=>decor.remove(),8000);
+},1500);
+</script>
+
+</body>
+</html>
