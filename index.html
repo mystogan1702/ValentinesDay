@@ -3,32 +3,33 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-<title>For My One and Only Babyyyy💕</title>
+<title>For My Valentine 💕</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Pacifico&display=swap" rel="stylesheet">
 
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
 
-body{
-min-height:100vh;
-background:linear-gradient(135deg,#ffd6e0,#f6c1ad);
-display:flex;
-justify-content:center;
-align-items:center;
-font-family:'Poppins',sans-serif;
-overflow-x:hidden;
-position:relative;
-padding:10px;
+/* fullscreen base */
+html, body {
+  width: 100%;
+  min-height: 100vh;
+  background:linear-gradient(135deg,#ffd6e0,#f6c1ad);
+  font-family:'Poppins',sans-serif;
+  overflow-x:hidden;
+  position:relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-/* Floating Hearts & decor */
+/* Floating hearts & decor (will also appear on gallery) */
 .heart{
 position:fixed;
 bottom:-20px;
 animation:floatUp linear forwards;
 pointer-events:none;
-z-index:1;
+z-index:5;
 }
 @keyframes floatUp{
 from{transform:translateY(0);opacity:1;}
@@ -40,14 +41,14 @@ font-size:20px;
 animation:floatDecor 8s linear infinite;
 opacity:0.6;
 pointer-events:none;
-z-index:1;
+z-index:5;
 }
 @keyframes floatDecor{
 0%{transform:translateY(100vh) rotate(0deg);}
 100%{transform:translateY(-120vh) rotate(360deg);}
 }
 
-/* Tease box — hidden by default */
+/* Tease box */
 #teaseBox{
 position:fixed;
 bottom:10px;
@@ -99,7 +100,7 @@ box-shadow:0 20px 40px rgba(0,0,0,0.2);
 overflow:hidden;
 cursor:pointer;
 }
-/* BOTTOM triangle (front flap) - now points upward like a real envelope */
+/* bottom triangle (points up) */
 .envelope:before{
 content:"";
 position:absolute;
@@ -108,9 +109,9 @@ left:0;
 width:100%;
 height:50%;
 background:#ff758f;
-clip-path:polygon(0 100%, 100% 100%, 50% 0);  /* upward pointing triangle */
+clip-path:polygon(0 100%, 100% 100%, 50% 0);
 }
-/* TOP triangle (flap) - remains pointing downward */
+/* top flap (points down) */
 .flap{
 position:absolute;
 top:0;
@@ -118,14 +119,14 @@ left:0;
 width:100%;
 height:50%;
 background:#ff8fa3;
-clip-path:polygon(0 0, 100% 0, 50% 100%); /* points down */
+clip-path:polygon(0 0, 100% 0, 50% 100%);
 transform-origin:top;
 transition:0.8s;
 z-index:25;
 }
 .open .flap{transform:rotateX(180deg);}
 
-/* Letter inside - now centers vertically */
+/* Letter - vertically centered */
 .letter{
 position:absolute;
 left:5%;
@@ -142,11 +143,9 @@ flex-direction:column;
 justify-content:center;
 align-items:center;
 transition:0.8s;
-/* Start hidden below */
 bottom: -220px;
 }
 .open .letter{
-/* Center vertically: approx 50% from bottom minus half its own height */
 bottom: 50%;
 transform: translateY(50%);
 }
@@ -203,7 +202,7 @@ top:50%;
 transform:translate(-50%,-50%) scale(1);
 }
 
-/* Gallery — full screen */
+/* GALLERY — fullscreen with hearts */
 .gallery{
 display:none;
 position:fixed;
@@ -214,27 +213,32 @@ height:100vh;
 background:linear-gradient(135deg,#ffd6e0,#f6c1ad);
 z-index:100;
 overflow-y:auto;
-padding:clamp(10px, 3vh, 25px);
+padding:clamp(15px, 4vh, 30px);
 text-align:center;
 }
 .gallery h1{
-margin-bottom:clamp(10px, 3vh, 20px);
+margin-bottom:clamp(10px, 2vh, 20px);
 }
+
+/* Grid: default 3 columns (PC, tablet landscape) */
 .grid{
 display:grid;
 grid-template-columns:repeat(3, 1fr);
 gap:clamp(10px, 2vw, 25px);
-max-width:800px;
+max-width:900px;
 margin:0 auto;
 justify-items:center;
-align-items:start;
+align-items:center;
 }
+
+/* phones: 2 columns (2x3 portrait) */
 @media (max-width:600px){
 .grid{
 grid-template-columns:repeat(2, 1fr);
 }
 }
 
+/* polaroid cards */
 .polaroid{
 background:white;
 padding:8px 8px 15px 8px;
@@ -332,7 +336,7 @@ will-change:left, top;
 </div>
 </div>
 
-<!-- Gallery full screen -->
+<!-- GALLERY fullscreen, with floating hearts (added via JS) -->
 <div class="gallery" id="gallery">
 <h1>You said YES 🥰</h1>
 <div class="grid">
@@ -453,31 +457,37 @@ function closeLetter(){
 document.getElementById("loveLetter").classList.remove("show");
 }
 
-// Background effects
-setInterval(()=>{
-const heart=document.createElement("div");
-heart.classList.add("heart");
-heart.innerHTML="🩷";
-heart.style.left=Math.random()*100+"vw";
-heart.style.fontSize=(15+Math.random()*20)+"px";
-heart.style.animationDuration=(4+Math.random()*3)+"s";
-document.body.appendChild(heart);
-setTimeout(()=>heart.remove(),7000);
-},500);
+// FLOATING HEARTS & DECOR – runs forever, visible on all pages (including gallery)
+function startFloatingElements() {
+  // hearts
+  setInterval(() => {
+    const heart = document.createElement("div");
+    heart.classList.add("heart");
+    heart.innerHTML = "🩷";
+    heart.style.left = Math.random() * 100 + "vw";
+    heart.style.fontSize = (15 + Math.random() * 20) + "px";
+    heart.style.animationDuration = (4 + Math.random() * 3) + "s";
+    document.body.appendChild(heart);
+    setTimeout(() => heart.remove(), 7000);
+  }, 400);
 
-setInterval(()=>{
-const emojis=["💖","🌹","💕","💘","💞"];
-const decor=document.createElement("div");
-decor.classList.add("decor");
-decor.innerHTML=emojis[Math.floor(Math.random()*emojis.length)];
-decor.style.left=Math.random()*100+"vw";
-document.body.appendChild(decor);
-setTimeout(()=>decor.remove(),8000);
-},1500);
+  // decor emojis
+  setInterval(() => {
+    const emojis = ["💖","🌹","💕","💘","💞"];
+    const decor = document.createElement("div");
+    decor.classList.add("decor");
+    decor.innerHTML = emojis[Math.floor(Math.random() * emojis.length)];
+    decor.style.left = Math.random() * 100 + "vw";
+    document.body.appendChild(decor);
+    setTimeout(() => decor.remove(), 8000);
+  }, 1200);
+}
+
+startFloatingElements();
 
 // Reposition no button on resize
 window.addEventListener('resize', ()=>{
-if(noClicks>0 && document.getElementById('noBtn').style.display!='none'){
+if(noClicks>0 && document.getElementById('noBtn') && document.getElementById('noBtn').style.display!='none'){
 const btn = document.getElementById('noBtn');
 const area = document.getElementById('buttonArea');
 if(btn && area){
