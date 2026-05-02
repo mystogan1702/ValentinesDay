@@ -1024,13 +1024,7 @@
     }
 
     // Initialize database
-    let DB = {
-      users: [],
-      appointments: [],
-      posts: [],
-      availableSlots: ["09:00", "10:00", "11:00", "13:00", "14:00", "15:00", "16:00", "17:00"]
-    };
-    
+    let DB = loadDB();
     let user = getLoggedInUser();
     if (!user) {
       alert('Please log in first');
