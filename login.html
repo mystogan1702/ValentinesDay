@@ -532,7 +532,7 @@
     </div>
   </div>
 
-  <script>
+  <script src="db.js">
     // Database API calls
     async function fetchDatabase() {
       try {
@@ -556,7 +556,7 @@
       }
     }
 
-    let DB = null;
+    let DB = loadDB();
     let selectedRole = '';
 
     // Load database on page load
@@ -607,23 +607,9 @@
       }
       
       const user = DB.users.find(u => u.email === email && u.password === password && u.role === role);
-      
       if (user) {
-        showMessage(messageEl, '✓ Login successful! Redirecting...', 'success');
-        
-        // Store user data
-        sessionStorage.setItem('physioLoggedInUser', JSON.stringify(user));
-        console.log('User saved to session:', user.id, user.name);
-        
-        // Save database to localStorage as backup
-        localStorage.setItem('physioDatabase', JSON.stringify(DB));
-        
-        // Redirect to dashboard
-        setTimeout(() => { 
-          window.location.href = 'dashboard.html';
-        }, 500);
-      } else {
-        showMessage(messageEl, '❌ Invalid credentials or role. Please try again.', 'error');
+        localStorage.setItem('physioLoggedInUser', JSON.stringify(user));
+        window.location.href = 'dashboard.html';
       }
     }
 
