@@ -70,7 +70,7 @@
       "role": "patient",
       "surname": "Kim",
       "firstname": "David",
-      "middlename": "",
+      "middlename": "Koral",
       "age": "28",
       "birthdate": "1998-07-22",
       "address": "45 Mabini St., Binan, Laguna",
@@ -128,6 +128,29 @@
         }
       ],
       "created": "2026-04-28"
+    },
+    {
+      "id": "PAT004",
+      "email": "john@gmail.com",
+      "password": "Johnadrien1702",
+      "role": "patient",
+      "surname": "Cabaddu",
+      "firstname": "John Adrien",
+      "middlename": "Dolorito",
+      "age": "23",
+      "birthdate": "2002-10-07",
+      "address": "Tandang Sora, Quezon City",
+      "phone": "09267569193",
+      "sex": "Male",
+      "occupation": "N/A",
+      "emergencyContact": {
+        "name": "Jul",
+        "phone": "09999999999",
+        "relationship": "Partner"
+      },
+      "medicalHistory": [],
+      "created": "2026-05-02",
+      "name": "John Adrien Dolorito Cabaddu"
     }
   ],
   "appointments": [
@@ -173,16 +196,6 @@
   ],
   "posts": [
     {
-      "id": "POST001",
-      "doctorId": "DOC001",
-      "doctorName": "Dr. Sarah Smith",
-      "title": "New Equipment Arrived!",
-      "content": "We're excited to announce the arrival of our new ultrasound therapy machine. This will greatly enhance our treatment options for soft tissue injuries.",
-      "type": "update",
-      "date": "2026-05-01",
-      "time": "09:30"
-    },
-    {
       "id": "POST002",
       "doctorId": "DOC002",
       "doctorName": "Dr. Michael Jones",
@@ -191,9 +204,63 @@
       "type": "promo",
       "date": "2026-05-02",
       "time": "11:00"
+    },
+    {
+      "id": "POST001",
+      "doctorId": "DOC001",
+      "doctorName": "Dr. Sarah Smith",
+      "title": "New Equipment Arrived!",
+      "content": "We're excited to announce the arrival of our new ultrasound therapy machine. This will greatly enhance our treatment options for soft tissue injuries.",
+      "type": "update",
+      "date": "2026-05-01",
+      "time": "09:30"
+    }
+  ],
+  "ratings": [
+    {
+      "id": "RATE001",
+      "patientId": "PAT001",
+      "patientName": "Maria Garcia",
+      "rating": 5,
+      "review": "After my knee surgery I was afraid to walk. The team gave me confidence and now I hike again! Truly life-changing care.",
+      "date": "2026-04-15",
+      "verified": true
+    },
+    {
+      "id": "RATE002",
+      "patientId": "PAT002",
+      "patientName": "David Kim",
+      "rating": 5,
+      "review": "Marathon training injury fixed in weeks. Professional, clean clinic, and effective exercises. Back to running stronger than ever.",
+      "date": "2026-04-20",
+      "verified": true
+    },
+    {
+      "id": "RATE003",
+      "patientId": "PAT003",
+      "patientName": "Juan Dela Cruz",
+      "rating": 4,
+      "review": "Lower back pain significantly improved after just 6 sessions. They truly listen and adapt treatment. Highly recommended.",
+      "date": "2026-05-01",
+      "verified": true
+    },
+    {
+      "id": "RATE004",
+      "patientId": "PAT001",
+      "rating": 5,
+      "review": "yesy",
+      "date": "2026-05-02",
+      "verified": true
     }
   ],
   "availableSlots": [
-    "09:00", "10:00", "11:00", "13:00", "14:00", "15:00", "16:00", "17:00"
+    "09:00",
+    "10:00",
+    "11:00",
+    "13:00",
+    "14:00",
+    "15:00",
+    "16:00",
+    "17:00"
   ]
 }

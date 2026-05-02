@@ -32,6 +32,7 @@
       --warning: #ffc107;
       --info: #17a2b8;
       --shadow: 0 10px 25px rgba(0,0,0,0.08);
+      --star-gold: #f4b400;
     }
 
     .dashboard-header {
@@ -74,6 +75,36 @@
       display: flex;
       align-items: center;
       gap: 15px;
+      position: relative;
+    }
+
+    /* Profile Picture in Header */
+    .profile-picture-header {
+      width: 45px;
+      height: 45px;
+      border-radius: 50%;
+      background: var(--maroon);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      color: white;
+      border: 2px solid var(--maroon-light);
+      flex-shrink: 0;
+    }
+
+    .user-info-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+      padding: 5px 10px;
+      border-radius: 30px;
+      transition: all 0.3s ease;
+    }
+
+    .user-info-wrapper:hover {
+      background: rgba(128, 0, 32, 0.05);
     }
 
     .user-name {
@@ -86,19 +117,166 @@
       text-transform: capitalize;
     }
 
-    .btn-logout {
-      padding: 8px 20px;
+    /* Settings Dropdown */
+    .settings-dropdown {
+      position: relative;
+      display: inline-block;
+    }
+
+    .btn-settings {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
       background: transparent;
       border: 2px solid var(--maroon);
       color: var(--maroon);
-      border-radius: 20px;
       cursor: pointer;
-      font-weight: 600;
+      font-size: 1.2rem;
       transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
-    .btn-logout:hover {
+
+    .btn-settings:hover {
       background: var(--maroon);
       color: white;
+    }
+
+    .dropdown-menu {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      margin-top: 8px;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+      min-width: 200px;
+      display: none;
+      z-index: 1000;
+      border: 1px solid var(--gray-border);
+      overflow: hidden;
+    }
+
+    .dropdown-menu.active {
+      display: block;
+      animation: slideDown 0.3s ease;
+    }
+
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .dropdown-menu a,
+    .dropdown-menu button {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+      padding: 12px 16px;
+      text-decoration: none;
+      color: #333;
+      border: none;
+      background: none;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: all 0.3s ease;
+      font-family: inherit;
+      text-align: left;
+    }
+
+    .dropdown-menu a:hover,
+    .dropdown-menu button:hover {
+      background: #fff5f7;
+      color: var(--maroon);
+    }
+
+    .dropdown-menu .divider {
+      height: 1px;
+      background: var(--gray-border);
+      margin: 4px 0;
+    }
+
+    .dropdown-menu .danger {
+      color: var(--danger);
+    }
+
+    .dropdown-menu .danger:hover {
+      background: #fff5f5;
+    }
+
+    /* Star Rating Input */
+    .star-rating-input {
+      display: flex;
+      gap: 5px;
+    }
+
+    .star-rating-input i {
+      color: #ddd;
+      transition: all 0.2s ease;
+    }
+
+    .star-rating-input i:hover,
+    .star-rating-input i.hover {
+      color: var(--star-gold);
+      transform: scale(1.2);
+    }
+
+    .star-rating-input i.selected {
+      color: var(--star-gold);
+    }
+
+    /* Review Card */
+    .review-card {
+      background: white;
+      border: 1px solid var(--gray-border);
+      border-radius: 12px;
+      padding: 1.2rem;
+      margin-bottom: 1rem;
+    }
+
+    .review-card .review-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.5rem;
+    }
+
+    .review-card .review-stars {
+      color: var(--star-gold);
+    }
+
+    .review-card .review-date {
+      font-size: 0.8rem;
+      color: #888;
+    }
+
+    .review-card .review-text {
+      color: #444;
+      font-style: italic;
+      line-height: 1.5;
+    }
+
+    .btn-delete {
+      background: #dc3545;
+      color: white;
+      border: none;
+      padding: 5px 12px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 0.8rem;
+      transition: all 0.3s ease;
+    }
+
+    .btn-delete:hover {
+      background: #c82333;
     }
 
     .dashboard-container {
@@ -119,27 +297,41 @@
     /* Tabs */
     .tab-nav {
       display: flex;
-      gap: 0;
-      margin-bottom: 1.5rem;
-      border-bottom: 2px solid var(--gray-border);
+      gap: 12px;
+      margin-bottom: 2rem;
       flex-wrap: wrap;
+      justify-content: center;
+      border-bottom: none;
+      padding: 0.5rem 0;
     }
     .tab-nav button {
-      padding: 10px 18px;
-      border: none;
-      background: transparent;
+      padding: 14px 24px;
+      border: 2px solid var(--gray-border);
+      background: white;
       cursor: pointer;
       font-weight: 600;
       font-size: 0.9rem;
       color: #666;
-      border-bottom: 3px solid transparent;
+      border-radius: 14px;
       transition: all 0.3s ease;
-      margin-bottom: -2px;
       white-space: nowrap;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      position: relative;
+      margin-bottom: 0;
     }
-    .tab-nav button.active {
+    .tab-nav button:hover {
+      border-color: var(--maroon-light);
       color: var(--maroon);
-      border-bottom-color: var(--maroon);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(128, 0, 32, 0.15);
+    }
+
+    .tab-nav button.active {
+      color: white;
+      background: var(--maroon);
+      border-color: var(--maroon);
+      box-shadow: 0 6px 20px rgba(128, 0, 32, 0.25);
+      transform: translateY(-2px);
     }
 
     .tab-content {
@@ -476,6 +668,46 @@
       border-color: var(--maroon);
     }
 
+    /* Modal for Delete Account */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 2000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.5);
+    }
+
+    .modal-content {
+      background-color: white;
+      margin: 10% auto;
+      padding: 2rem;
+      border-radius: 20px;
+      max-width: 500px;
+      position: relative;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .close-modal {
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: #888;
+      transition: color 0.3s;
+    }
+
+    .close-modal:hover {
+      color: var(--danger);
+    }
+
     @media (max-width: 768px) {
       .form-grid-2, .form-grid-3 {
         grid-template-columns: 1fr;
@@ -500,14 +732,36 @@
     <div class="header-content">
       <div class="header-left">
         <i class="fas fa-heartbeat"></i>
-        <h2>The Good Physio</h2>
+        <h2>The Good Physio </h2>
       </div>
       <div class="header-right">
-        <div>
-          <div class="user-name" id="headerUserName"></div>
-          <div class="user-role" id="headerUserRole"></div>
+        <div class="user-info-wrapper" onclick="goToProfile()" title="View Profile">
+          <div class="profile-picture-header" id="headerProfilePic">
+            <!-- Dynamically loaded -->
+          </div>
+          <div>
+            <div class="user-name" id="headerUserName"></div>
+            <div class="user-role" id="headerUserRole"></div>
+          </div>
         </div>
-        <button class="btn-logout" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
+        <div class="settings-dropdown">
+          <button class="btn-settings" id="settingsBtn" title="Settings">
+            <i class="fas fa-cog"></i>
+          </button>
+          <div class="dropdown-menu" id="dropdownMenu">
+            <a href="#" onclick="goToProfile()">
+              <i class="fas fa-user"></i> Profile Settings
+            </a>
+            <div class="divider"></div>
+            <button onclick="logout()">
+              <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
+            <div class="divider"></div>
+            <button onclick="confirmDeleteAccount()" class="danger">
+              <i class="fas fa-trash-alt"></i> Delete Account
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   </header>
@@ -559,6 +813,44 @@
       <div class="card">
         <h3><i class="fas fa-list-check"></i> My Appointments</h3>
         <div id="myAppointmentsContainer"><p style="color:#888;">Loading...</p></div>
+      </div>
+    </div>
+
+    <div class="tab-content" id="tab-rateService">
+      <div class="card">
+        <h3><i class="fas fa-star"></i> Rate Your Experience</h3>
+        <p style="color:#666; margin-bottom:1.5rem;">We value your feedback! Rate your overall experience with The Good Physio.</p>
+        
+        <div class="form-field">
+          <label>Your Rating</label>
+          <div class="star-rating-input" id="starRatingInput" style="font-size:2.5rem; cursor:pointer; margin-bottom:1rem;">
+            <i class="far fa-star" data-rating="1"></i>
+            <i class="far fa-star" data-rating="2"></i>
+            <i class="far fa-star" data-rating="3"></i>
+            <i class="far fa-star" data-rating="4"></i>
+            <i class="far fa-star" data-rating="5"></i>
+          </div>
+          <input type="hidden" id="selectedRating" value="0">
+          <p id="ratingText" style="color:#888; margin-bottom:1rem;">Click a star to rate</p>
+        </div>
+        
+        <div class="form-field">
+          <label>Your Review</label>
+          <textarea id="reviewText" rows="4" placeholder="Share your experience with us..." style="width:100%;padding:12px;border:1.5px solid #ddd;border-radius:10px;font-family:inherit;font-size:0.95rem;"></textarea>
+        </div>
+        
+        <button class="btn-primary" onclick="submitRating()">
+          <i class="fas fa-paper-plane"></i> Submit Review
+        </button>
+        <div class="message-toast" id="ratingMessage"></div>
+      </div>
+      
+      <!-- My Previous Ratings -->
+      <div class="card" style="margin-top:1.5rem;">
+        <h3><i class="fas fa-history"></i> My Reviews</h3>
+        <div id="myRatingsContainer">
+          <p style="color:#888;">Loading your reviews...</p>
+        </div>
       </div>
     </div>
 
@@ -674,59 +966,171 @@
     </div>
   </div>
 
+  <!-- Delete Account Modal -->
+  <div class="modal" id="deleteAccountModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 style="color: var(--danger);"><i class="fas fa-exclamation-triangle"></i> Delete Account</h3>
+        <span class="close-modal" onclick="closeDeleteModal()">&times;</span>
+      </div>
+      <p style="margin-bottom: 1rem;">This action cannot be undone. All your data will be permanently removed.</p>
+      <div class="form-field">
+        <label>Enter your password to confirm:</label>
+        <input type="password" id="deletePassword" placeholder="Enter password">
+      </div>
+      <button class="btn-primary" style="background: var(--danger);" onclick="deleteAccount()">
+        <i class="fas fa-trash-alt"></i> Delete My Account
+      </button>
+      <button class="btn-secondary" onclick="closeDeleteModal()" style="margin-left:1rem;">Cancel</button>
+      <div class="message-toast" id="deleteMessage"></div>
+    </div>
+  </div>
+
   <script>
     // ==================== DATABASE ====================
-    function loadDB() { return JSON.parse(localStorage.getItem('physioDatabase') || '{"users":[],"appointments":[],"posts":[],"availableSlots":["09:00","10:00","11:00","13:00","14:00","15:00","16:00","17:00"]}'); }
-    function saveDB(db) { localStorage.setItem('physioDatabase', JSON.stringify(db)); }
+    async function loadDB() {
+      try {
+        const response = await fetch('/api/database');
+        const data = await response.json();
+        return data;
+      } catch (error) {
+        // Fallback to localStorage if server not available
+        console.log('Server not available, using localStorage');
+        return JSON.parse(localStorage.getItem('physioDatabase') || '{"users":[],"appointments":[],"posts":[],"availableSlots":["09:00","10:00","11:00","13:00","14:00","15:00","16:00","17:00"]}');
+      }
+    }
+    
+    async function saveDB(db) {
+      try {
+        await fetch('/api/database', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(db)
+        });
+      } catch (error) {
+        // Fallback to localStorage
+        localStorage.setItem('physioDatabase', JSON.stringify(db));
+      }
+    }
+    
     function getLoggedInUser() {
-      const u = localStorage.getItem('physioLoggedInUser');
+      // Try sessionStorage first (from server login)
+      let u = sessionStorage.getItem('physioLoggedInUser');
+      if (!u) {
+        // Fallback to localStorage
+        u = localStorage.getItem('physioLoggedInUser');
+      }
       return u ? JSON.parse(u) : null;
     }
 
-    let DB = loadDB();
-    const user = getLoggedInUser();
-    if (!user) window.location.href = 'login.html';
+    // Initialize database
+    let DB = {
+      users: [],
+      appointments: [],
+      posts: [],
+      availableSlots: ["09:00", "10:00", "11:00", "13:00", "14:00", "15:00", "16:00", "17:00"]
+    };
+    
+    let user = getLoggedInUser();
+    if (!user) {
+      alert('Please log in first');
+      window.location.href = '/login.html';
+    }
 
     let selectedPatientId = null;
     let allPatients = [];
 
     // ==================== INIT ====================
-    document.getElementById('headerUserName').textContent = user.name;
-    document.getElementById('headerUserRole').textContent = `${user.role} (${user.id})`;
-    document.getElementById('welcomeBanner').innerHTML = `
-      <h1>Welcome, ${(user.firstname || user.name).split(' ')[0]}!</h1>
-      <p>${user.role === 'doctor' ? 'Manage appointments, patient records, and clinic updates.' : 'Book appointments and stay updated.'}</p>
-    `;
+    async function initDashboard() {
+      DB = await loadDB();
+      console.log('Database loaded:', DB);
+      console.log('Current user:', user);
+      
+      const displayName = user.name || [user.firstname, user.surname].filter(Boolean).join(' ') || 'Unknown';
+      document.getElementById('headerUserName').textContent = displayName;
+      document.getElementById('headerUserRole').textContent = `${user.role} (${user.id})`;
+      
+      // Set profile picture based on sex
+      const profilePic = document.getElementById('headerProfilePic');
+      if (profilePic) {
+        const sex = (user.sex || '').toLowerCase();
+        if (sex === 'male') {
+          profilePic.innerHTML = '<i class="fas fa-male"></i>';
+        } else if (sex === 'female') {
+          profilePic.innerHTML = '<i class="fas fa-female"></i>';
+        } else {
+          profilePic.innerHTML = '<i class="fas fa-user"></i>';
+        }
+      }
+      
+        const firstName = user.firstname || (user.name ? user.name.split(' ')[0] : 'User');
+        document.getElementById('welcomeBanner').innerHTML = `
+          <h1>Welcome, ${firstName}!</h1>
+          <p>${user.role === 'doctor' ? 'Manage appointments, patient records, and clinic updates.' : 'Book appointments and stay updated.'}</p>
+        `;
 
-    const patientTabs = [
-      { id: 'viewPosts', label: '📢 Updates & Promos' },
-      { id: 'bookAppointment', label: '📅 Book Appointment' },
-      { id: 'myAppointments', label: '📋 My Appointments' }
-    ];
-    const doctorTabs = [
-      { id: 'createPost', label: '✏️ Posts' },
-      { id: 'doctorAppointments', label: '📅 Appointments' },
-      { id: 'patientRecords', label: '📁 Patient Records' }
-    ];
-    const tabs = user.role === 'patient' ? patientTabs : doctorTabs;
+      const patientTabs = [
+        { id: 'viewPosts', label: '📢 Updates & Promos' },
+        { id: 'bookAppointment', label: '📅 Book Appointment' },
+        { id: 'myAppointments', label: '📋 My Appointments' },
+        { id: 'rateService', label: '⭐ Rate Us' }
+      ];
+      const doctorTabs = [
+        { id: 'createPost', label: '✏️ Posts' },
+        { id: 'doctorAppointments', label: '📅 Appointments' },
+        { id: 'patientRecords', label: '📁 Patient Records' }
+      ];
+      const tabs = user.role === 'patient' ? patientTabs : doctorTabs;
 
-    const tabNav = document.getElementById('tabNav');
-    tabs.forEach((tab, i) => {
-      const btn = document.createElement('button');
-      btn.textContent = tab.label;
-      btn.className = i === 0 ? 'active' : '';
-      btn.onclick = () => switchTab(tab.id);
-      tabNav.appendChild(btn);
-    });
-    switchTab(tabs[0].id);
+      const tabNav = document.getElementById('tabNav');
+      tabNav.innerHTML = '';
+      tabs.forEach((tab, i) => {
+        const btn = document.createElement('button');
+        btn.textContent = tab.label;
+        btn.className = i === 0 ? 'active' : '';
+        btn.onclick = () => switchTab(tab.id);
+        tabNav.appendChild(btn);
+      });
+      
+      switchTab(tabs[0].id);
 
-    // Set min date
-    document.getElementById('selectDate')?.setAttribute('min', new Date().toISOString().split('T')[0]);
+      // Settings dropdown
+      const settingsBtn = document.getElementById('settingsBtn');
+      if (settingsBtn) {
+        settingsBtn.addEventListener('click', function(e) {
+          e.stopPropagation();
+          document.getElementById('dropdownMenu').classList.toggle('active');
+        });
+      }
 
-    if (user.role === 'patient') {
-      loadPosts(); loadDoctors(); loadMyAppointments();
-    } else {
-      loadDoctorAppointments(); loadPatientList(); loadDoctorPosts();
+      document.addEventListener('click', function() {
+        const dropdown = document.getElementById('dropdownMenu');
+        if (dropdown) dropdown.classList.remove('active');
+      });
+
+      // Set min date for appointment booking
+      const selectDate = document.getElementById('selectDate');
+      if (selectDate) selectDate.setAttribute('min', new Date().toISOString().split('T')[0]);
+
+      // Load initial data
+      if (user.role === 'patient') {
+        loadPosts(); 
+        loadDoctors(); 
+        loadMyAppointments(); 
+        loadMyRatings();
+      } else {
+        loadDoctorAppointments(); 
+        loadPatientList(); 
+        loadDoctorPosts();
+      }
+    }
+
+    // Run initialization
+    initDashboard();
+
+    // ==================== PROFILE REDIRECT ====================
+    function goToProfile() {
+      window.location.href = '/profile.html';
     }
 
     // ==================== TAB SWITCHING ====================
@@ -735,22 +1139,73 @@
       document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
       const target = document.getElementById('tab-' + tabId);
       if (target) target.classList.add('active');
-      const idx = tabs.findIndex(t => t.id === tabId);
-      if (idx >= 0) document.querySelectorAll('.tab-nav button')[idx].classList.add('active');
       
-      DB = loadDB();
+      // Find and activate the correct tab button
+      const buttons = document.querySelectorAll('.tab-nav button');
+      const tabs = user.role === 'patient' ? 
+        ['viewPosts', 'bookAppointment', 'myAppointments', 'rateService'] : 
+        ['createPost', 'doctorAppointments', 'patientRecords'];
+      const idx = tabs.indexOf(tabId);
+      if (idx >= 0 && buttons[idx]) buttons[idx].classList.add('active');
+      
+      // Load data for the selected tab
       if (tabId === 'viewPosts') loadPosts();
       if (tabId === 'myAppointments') loadMyAppointments();
       if (tabId === 'doctorAppointments') loadDoctorAppointments();
       if (tabId === 'patientRecords') { loadPatientList(); resetPatientView(); }
-      if (tabId === 'createPost' || tabId === 'doctorPosts') loadDoctorPosts();
+      if (tabId === 'createPost') loadDoctorPosts();
+      if (tabId === 'rateService') loadMyRatings();
+      if (tabId === 'bookAppointment') loadDoctors();
+    }
+
+    // ==================== DELETE ACCOUNT ====================
+    function confirmDeleteAccount() {
+      document.getElementById('deleteAccountModal').style.display = 'block';
+    }
+
+    function closeDeleteModal() {
+      document.getElementById('deleteAccountModal').style.display = 'none';
+      const deletePassword = document.getElementById('deletePassword');
+      if (deletePassword) deletePassword.value = '';
+    }
+
+    async function deleteAccount() {
+      DB = await loadDB();
+      const password = document.getElementById('deletePassword').value;
+      
+      if (password !== user.password) {
+        showToast('deleteMessage', 'Incorrect password.', 'error');
+        return;
+      }
+      
+      if (!confirm('Are you absolutely sure? This will permanently delete your account and all associated data.')) return;
+      
+      // Remove user from database
+      DB.users = DB.users.filter(u => u.id !== user.id);
+      
+      // Remove user's appointments
+      DB.appointments = (DB.appointments || []).filter(a => a.patientId !== user.id && a.doctorId !== user.id);
+      
+      // Remove user's posts (if doctor)
+      DB.posts = (DB.posts || []).filter(p => p.doctorId !== user.id);
+      
+      // Remove user's ratings
+      DB.ratings = (DB.ratings || []).filter(r => r.patientId !== user.id);
+      
+      await saveDB(DB);
+      
+      // Clear login and redirect
+      sessionStorage.removeItem('physioLoggedInUser');
+      localStorage.removeItem('physioLoggedInUser');
+      alert('Your account has been permanently deleted.');
+      window.location.href = '/index.html';
     }
 
     // ==================== PATIENT: Posts ====================
     function loadPosts() {
-      DB = loadDB();
       const posts = DB.posts || [];
       const container = document.getElementById('postsContainer');
+      if (!container) return;
       if (!posts.length) { container.innerHTML = '<p style="color:#888;">No posts yet.</p>'; return; }
       container.innerHTML = posts.sort((a,b) => new Date(b.date) - new Date(a.date)).map(p => `
         <div class="post-card">
@@ -764,14 +1219,13 @@
 
     // ==================== PATIENT: Booking ====================
     function loadDoctors() {
-      DB = loadDB();
       const select = document.getElementById('selectDoctor');
+      if (!select) return;
       const docs = DB.users.filter(u => u.role === 'doctor');
       select.innerHTML = '<option value="">Choose a doctor...</option>' + docs.map(d => `<option value="${d.id}">${d.name} - ${d.specialization || 'General'}</option>`).join('');
     }
 
     function loadAvailableSlots() {
-      DB = loadDB();
       const docId = document.getElementById('selectDoctor').value;
       const date = document.getElementById('selectDate').value;
       const container = document.getElementById('timeSlotsContainer');
@@ -790,8 +1244,7 @@
       window.selectedTime = time;
     }
 
-    function bookAppointment() {
-      DB = loadDB();
+    async function bookAppointment() {
       const docId = document.getElementById('selectDoctor').value;
       const date = document.getElementById('selectDate').value;
       const service = document.getElementById('selectService').value;
@@ -807,22 +1260,22 @@
         date, time: window.selectedTime, service, status: 'confirmed', notes, created: new Date().toISOString().split('T')[0]
       };
       if (!DB.appointments) DB.appointments = [];
-      DB.appointments.push(apt); saveDB(DB);
+      DB.appointments.push(apt); 
+      await saveDB(DB);
       showToast('bookingMessage', 'Booked! 🎉', 'success');
       loadAvailableSlots(); loadMyAppointments();
     }
 
     function loadMyAppointments() {
-      DB = loadDB();
       const apps = (DB.appointments || []).filter(a => a.patientId === user.id);
       const c = document.getElementById('myAppointmentsContainer');
+      if (!c) return;
       if (!apps.length) { c.innerHTML = '<p style="color:#888;">No appointments.</p>'; return; }
       c.innerHTML = `<table><thead><tr><th>Date</th><th>Time</th><th>Doctor</th><th>Service</th><th>Status</th></tr></thead><tbody>${apps.sort((a,b)=>new Date(b.date)-new Date(a.date)).map(a => `<tr><td>${a.date}</td><td>${a.time}</td><td>${a.doctorName}</td><td>${a.service}</td><td class="status-confirmed">${a.status.charAt(0).toUpperCase()+a.status.slice(1)}</td></tr>`).join('')}</tbody></table>`;
     }
 
     // ==================== DOCTOR: Posts ====================
-    function createPost() {
-      DB = loadDB();
+    async function createPost() {
       const title = document.getElementById('postTitle').value.trim();
       const content = document.getElementById('postContent').value.trim();
       if (!title || !content) { showToast('postMessage', 'Fill all fields.', 'error'); return; }
@@ -834,16 +1287,18 @@
         time: new Date().toTimeString().split(' ')[0].substring(0,5)
       };
       if (!DB.posts) DB.posts = [];
-      DB.posts.push(post); saveDB(DB);
+      DB.posts.push(post); 
+      await saveDB(DB);
       showToast('postMessage', 'Published! 📢', 'success');
-      document.getElementById('postTitle').value = ''; document.getElementById('postContent').value = '';
+      document.getElementById('postTitle').value = ''; 
+      document.getElementById('postContent').value = '';
       loadDoctorPosts();
     }
 
     function loadDoctorPosts() {
-      DB = loadDB();
       const posts = (DB.posts || []).filter(p => p.doctorId === user.id);
       const c = document.getElementById('doctorPostsContainer');
+      if (!c) return;
       if (!posts.length) { c.innerHTML = '<p style="color:#888;">No posts yet.</p>'; return; }
       c.innerHTML = posts.sort((a,b)=>new Date(b.date)-new Date(a.date)).map(p => `
         <div class="post-card">
@@ -854,20 +1309,23 @@
       `).join('');
     }
 
-    function deletePost(id) { DB = loadDB(); DB.posts = (DB.posts || []).filter(p => p.id !== id); saveDB(DB); loadDoctorPosts(); }
+    async function deletePost(id) { 
+      DB.posts = (DB.posts || []).filter(p => p.id !== id); 
+      await saveDB(DB); 
+      loadDoctorPosts(); 
+    }
 
     // ==================== DOCTOR: Appointments ====================
     function loadDoctorAppointments() {
-      DB = loadDB();
       const apps = (DB.appointments || []).filter(a => a.doctorId === user.id);
       const c = document.getElementById('doctorAppointmentsContainer');
+      if (!c) return;
       if (!apps.length) { c.innerHTML = '<p style="color:#888;">No appointments.</p>'; return; }
       c.innerHTML = `<table><thead><tr><th>Date</th><th>Time</th><th>Patient</th><th>Service</th><th>Status</th><th>Notes</th></tr></thead><tbody>${apps.sort((a,b)=>new Date(a.date)-new Date(b.date)).map(a => `<tr><td>${a.date}</td><td>${a.time}</td><td><strong>${a.patientName}</strong></td><td>${a.service}</td><td class="status-confirmed">${a.status.charAt(0).toUpperCase()+a.status.slice(1)}</td><td>${a.notes||'-'}</td></tr>`).join('')}</tbody></table>`;
     }
 
     // ==================== DOCTOR: Patient Records ====================
     function loadPatientList() {
-      DB = loadDB();
       allPatients = DB.users.filter(u => u.role === 'patient');
       renderPatientList(allPatients);
     }
@@ -883,6 +1341,7 @@
 
     function renderPatientList(list) {
       const c = document.getElementById('patientList');
+      if (!c) return;
       if (!list.length) { c.innerHTML = '<p style="color:#888;">No patients found.</p>'; return; }
       c.innerHTML = list.map(p => `
         <div class="patient-select-item ${selectedPatientId === p.id ? 'selected' : ''}" onclick="selectPatient('${p.id}')">
@@ -897,15 +1356,11 @@
 
     function selectPatient(id) {
       selectedPatientId = id;
-      document.querySelectorAll('.patient-select-item').forEach(el => el.classList.remove('selected'));
-      const items = document.querySelectorAll('.patient-select-item');
-      const idx = allPatients.findIndex(p => p.id === id);
-      if (idx >= 0 && items[idx]) items[idx].classList.add('selected');
+      renderPatientList(allPatients);
     }
 
     function viewPatientRecord() {
-      if (!selectedPatientId) { showToast('historyMessage', 'Select a patient first.', 'error'); return; }
-      DB = loadDB();
+      if (!selectedPatientId) { alert('Select a patient first.'); return; }
       const patient = DB.users.find(u => u.id === selectedPatientId);
       if (!patient) return;
       
@@ -937,7 +1392,6 @@
           <div class="info-item"><div class="info-label">Occupation</div><div class="info-value">${patient.occupation || 'N/A'}</div></div>
           <div class="info-item"><div class="info-label">Registered</div><div class="info-value">${patient.created || 'N/A'}</div></div>
         </div>
-        
         <div class="card" style="margin-top:1rem; background:#fff5f7;">
           <h4 style="color:var(--maroon);">🆘 Emergency Contact</h4>
           <div class="profile-info-grid">
@@ -946,7 +1400,6 @@
             <div class="info-item"><div class="info-label">Relationship</div><div class="info-value">${ec.relationship || 'N/A'}</div></div>
           </div>
         </div>
-        
         <h3 style="margin-top:1.5rem; color:var(--maroon);">📋 Medical History (${history.length} visits)</h3>
         <div class="history-timeline">
           ${history.length === 0 ? '<p style="color:#888;">No medical history recorded yet.</p>' : 
@@ -973,8 +1426,7 @@
       document.getElementById('addHistoryCard').style.display = 'none';
     }
 
-    function saveMedicalHistory() {
-      DB = loadDB();
+    async function saveMedicalHistory() {
       const patient = DB.users.find(u => u.id === selectedPatientId);
       if (!patient) return;
       
@@ -996,7 +1448,7 @@
       
       if (!patient.medicalHistory) patient.medicalHistory = [];
       patient.medicalHistory.push(histEntry);
-      saveDB(DB);
+      await saveDB(DB);
       
       showToast('historyMessage', 'Medical history saved! ✅', 'success');
       document.getElementById('addHistoryCard').style.display = 'none';
@@ -1021,70 +1473,114 @@
       document.getElementById('addPatientCard').style.display = 'none';
     }
 
-    function showAddPatientForm() {
-      document.getElementById('patientSelectionCard').style.display = 'none';
-      document.getElementById('patientProfileCard').style.display = 'none';
-      document.getElementById('addPatientCard').style.display = 'block';
-    }
-
-    function cancelAddPatient() {
-      document.getElementById('addPatientCard').style.display = 'none';
-      document.getElementById('patientSelectionCard').style.display = 'block';
-    }
-
-    function addNewPatient(event) {
-      event.preventDefault();
-      DB = loadDB();
+    // ==================== STAR RATING ====================
+    (function initStarRating() {
+      const stars = document.querySelectorAll('#starRatingInput i');
+      const ratingText = document.getElementById('ratingText');
+      const ratingTexts = ['Click a star to rate', 'Poor', 'Fair', 'Good', 'Very Good', 'Excellent!'];
       
-      const idNumber = String(DB.users.filter(u => u.role === 'patient').length + 1).padStart(3, '0');
-      const patientId = 'PAT' + idNumber;
-      const firstname = document.getElementById('newPatFirstname').value.trim();
-      const middlename = document.getElementById('newPatMiddlename').value.trim();
-      const surname = document.getElementById('newPatSurname').value.trim();
+      if (!stars.length) return;
       
-      const newPatient = {
-        id: patientId,
-        email: document.getElementById('newPatEmail').value.trim(),
-        password: '',
-        role: 'patient',
-        surname, firstname, middlename,
-        name: [firstname, middlename, surname].filter(Boolean).join(' '),
-        age: document.getElementById('newPatAge').value,
-        birthdate: document.getElementById('newPatBirthdate').value,
-        address: document.getElementById('newPatAddress').value.trim(),
-        phone: document.getElementById('newPatPhone').value.trim(),
-        sex: document.getElementById('newPatSex').value,
-        occupation: document.getElementById('newPatOccupation').value.trim(),
-        emergencyContact: {
-          name: document.getElementById('newPatEmergName').value.trim(),
-          phone: document.getElementById('newPatEmergPhone').value.trim(),
-          relationship: document.getElementById('newPatEmergRelationship').value
-        },
-        medicalHistory: [],
-        created: new Date().toISOString().split('T')[0]
+      stars.forEach(star => {
+        star.addEventListener('mouseover', function() {
+          const rating = parseInt(this.dataset.rating);
+          updateStars(rating, 'hover');
+          if (ratingText) ratingText.textContent = ratingTexts[rating];
+        });
+        
+        star.addEventListener('mouseout', function() {
+          const currentRating = parseInt(document.getElementById('selectedRating').value);
+          updateStars(currentRating, 'selected');
+          if (ratingText) ratingText.textContent = currentRating > 0 ? ratingTexts[currentRating] : 'Click a star to rate';
+        });
+        
+        star.addEventListener('click', function() {
+          const rating = parseInt(this.dataset.rating);
+          document.getElementById('selectedRating').value = rating;
+          updateStars(rating, 'selected');
+          if (ratingText) ratingText.textContent = ratingTexts[rating];
+        });
+      });
+      
+      function updateStars(rating, className) {
+        stars.forEach(s => {
+          s.className = parseInt(s.dataset.rating) <= rating ? `fas fa-star ${className}` : 'far fa-star';
+        });
+      }
+    })();
+
+    async function submitRating() {
+      const rating = parseInt(document.getElementById('selectedRating').value);
+      const review = document.getElementById('reviewText').value.trim();
+      
+      if (rating === 0) { showToast('ratingMessage', 'Please select a star rating.', 'error'); return; }
+      if (!review) { showToast('ratingMessage', 'Please write a review.', 'error'); return; }
+      
+      const newRating = {
+        id: 'RATE' + String((DB.ratings || []).length + 1).padStart(3, '0'),
+        patientId: user.id, patientName: user.name, rating, review,
+        date: new Date().toISOString().split('T')[0], verified: true
       };
       
-      DB.users.push(newPatient);
-      saveDB(DB);
+      if (!DB.ratings) DB.ratings = [];
+      DB.ratings.push(newRating);
+      await saveDB(DB);
+      showToast('ratingMessage', 'Thank you for your review! ⭐', 'success');
+      document.getElementById('selectedRating').value = 0;
+      document.getElementById('reviewText').value = '';
+      document.getElementById('ratingText').textContent = 'Click a star to rate';
+      document.querySelectorAll('#starRatingInput i').forEach(s => s.className = 'far fa-star');
+      loadMyRatings();
+    }
+
+    function loadMyRatings() {
+      const myRatings = (DB.ratings || []).filter(r => r.patientId === user.id);
+      const container = document.getElementById('myRatingsContainer');
+      if (!container) return;
+      if (myRatings.length === 0) { container.innerHTML = '<p style="color:#888;">No reviews yet.</p>'; return; }
       
-      showToast('addPatientMessage', 'Patient added successfully! ✅', 'success');
-      event.target.reset();
-      document.getElementById('addPatientCard').style.display = 'none';
-      document.getElementById('patientSelectionCard').style.display = 'block';
-      loadPatientList();
+      function getStars(rating) {
+        let stars = '';
+        for (let i = 1; i <= 5; i++) stars += i <= rating ? '<i class="fas fa-star"></i>' : '<i class="far fa-star"></i>';
+        return stars;
+      }
+      
+      container.innerHTML = myRatings.sort((a, b) => new Date(b.date) - new Date(a.date)).map(r => `
+        <div class="review-card">
+          <div class="review-header">
+            <div class="review-stars">${getStars(r.rating)} <span style="color:#333;font-weight:600;">${r.rating}/5</span></div>
+            <div>
+              <span class="review-date">${r.date}</span>
+              <button class="btn-delete" onclick="deleteRating('${r.id}')" style="margin-left:10px;">🗑 Delete</button>
+            </div>
+          </div>
+          <div class="review-text">"${r.review}"</div>
+          <div style="font-size:0.8rem;color:#888;margin-top:0.5rem;">${r.verified ? '✅ Verified Patient' : ''}</div>
+        </div>
+      `).join('');
+    }
+
+    async function deleteRating(ratingId) {
+      if (!confirm('Are you sure you want to delete this review?')) return;
+      DB.ratings = (DB.ratings || []).filter(r => r.id !== ratingId);
+      await saveDB(DB);
+      loadMyRatings();
     }
 
     // ==================== UTILS ====================
     function showToast(id, msg, type) {
       const el = document.getElementById(id);
       if (!el) return;
-      el.textContent = msg; el.className = 'message-toast ' + type; el.style.display = 'block';
+      el.textContent = msg; 
+      el.className = 'message-toast ' + type; 
+      el.style.display = 'block';
       setTimeout(() => el.style.display = 'none', 3000);
     }
 
     function logout() {
+      sessionStorage.removeItem('physioLoggedInUser');
       localStorage.removeItem('physioLoggedInUser');
-      window.location.href = 'login.html';
+      window.location.href = '/index.html';
     }
   </script>
 </body>

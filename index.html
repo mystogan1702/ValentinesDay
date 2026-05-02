@@ -854,82 +854,18 @@
     </div>
 
     <!-- Testimonials Section with Star Ratings -->
+    <!-- Testimonials Section with Dynamic Star Ratings -->
     <div id="testimonials" class="container fade-in-section">
       <div class="section-title">
         <h2>What our patients say</h2>
+        <p style="text-align:center; margin-top:0.5rem; color:#666;">
+          <span style="color: var(--star-gold); font-size:1.2rem;">★★★★★</span> 
+          <span id="overallRating" style="font-weight:700;">4.8</span> average rating
+        </p>
       </div>
-      <div class="testimonial-grid">
-        <div class="testimonial-card">
-          <div class="testimonial-header">
-            <div class="testimonial-avatar">MG</div>
-            <div>
-              <div class="testimonial-name">Maria Garcia</div>
-              <div class="testimonial-date">3 months ago</div>
-            </div>
-          </div>
-          <div class="star-rating">
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-          </div>
-          <p class="testimonial-text">After my knee surgery I was afraid to walk. The team gave me confidence and now I hike again! Truly life-changing care.</p>
-        </div>
-
-        <div class="testimonial-card">
-          <div class="testimonial-header">
-            <div class="testimonial-avatar">DK</div>
-            <div>
-              <div class="testimonial-name">David Kim</div>
-              <div class="testimonial-date">1 month ago</div>
-            </div>
-          </div>
-          <div class="star-rating">
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-          </div>
-          <p class="testimonial-text">Marathon training injury fixed in weeks. Professional, clean clinic, and effective exercises. Back to running stronger than ever.</p>
-        </div>
-
-        <div class="testimonial-card">
-          <div class="testimonial-header">
-            <div class="testimonial-avatar">ER</div>
-            <div>
-              <div class="testimonial-name">Elena Rodriguez</div>
-              <div class="testimonial-date">2 weeks ago</div>
-            </div>
-          </div>
-          <div class="star-rating">
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star-half-alt"></i>
-          </div>
-          <p class="testimonial-text">Lower back pain gone after just 6 sessions. They truly listen and adapt treatment. Highly recommended to everyone.</p>
-        </div>
-
-        <div class="testimonial-card">
-          <div class="testimonial-header">
-            <div class="testimonial-avatar">JT</div>
-            <div>
-              <div class="testimonial-name">James Thompson</div>
-              <div class="testimonial-date">1 week ago</div>
-            </div>
-          </div>
-          <div class="star-rating">
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-          </div>
-          <p class="testimonial-text">Shoulder injury from swimming completely resolved. The therapists are knowledgeable and genuinely care about your recovery.</p>
-        </div>
+      <div class="testimonial-grid" id="testimonialGrid">
+        <!-- Dynamically loaded from database -->
+        <p style="text-align:center; color:#888; grid-column: 1/-1;">Loading reviews...</p>
       </div>
     </div>
 
@@ -1021,6 +957,105 @@
 
   <script>
     (function() {
+      // ========== DATABASE LOADING ==========
+      async function loadDatabase() {
+        try {
+          const response = await fetch('/api/database');
+          return await response.json();
+        } catch (error) {
+          console.log('Server not available, using localStorage');
+          return JSON.parse(localStorage.getItem('physioDatabase') || '{"users":[],"appointments":[],"posts":[],"ratings":[],"availableSlots":[]}');
+        }
+      }
+
+      // ========== LOAD RATINGS FROM DATABASE ==========
+      async function loadTestimonials() {
+        const db = await loadDatabase();
+        const ratings = db.ratings || [];
+        const grid = document.getElementById('testimonialGrid');
+        const overallEl = document.getElementById('overallRating');
+        
+        if (!grid) return;
+        
+        if (ratings.length === 0) {
+          grid.innerHTML = `
+            <div class="testimonial-card" style="grid-column:1/-1; text-align:center;">
+              <p style="color:#888;">No reviews yet. Be the first to share your experience!</p>
+            </div>
+          `;
+          if (overallEl) overallEl.textContent = '0.0';
+          return;
+        }
+        
+        // Calculate average rating
+        const avgRating = (ratings.reduce((sum, r) => sum + r.rating, 0) / ratings.length).toFixed(1);
+        if (overallEl) overallEl.textContent = avgRating;
+        
+        // Generate star HTML
+        function getStars(rating) {
+          let stars = '';
+          for (let i = 1; i <= 5; i++) {
+            if (i <= rating) {
+              stars += '<i class="fas fa-star"></i>';
+            } else if (i - 0.5 <= rating) {
+              stars += '<i class="fas fa-star-half-alt"></i>';
+            } else {
+              stars += '<i class="far fa-star"></i>';
+            }
+          }
+          return stars;
+        }
+        
+        // Generate initials
+        function getInitials(name) {
+          if (!name) return '?';
+          return name.split(' ').map(n => n.charAt(0)).join('').toUpperCase().substring(0, 2);
+        }
+        
+        // Sort by date (newest first)
+        const sortedRatings = ratings.sort((a, b) => new Date(b.date) - new Date(a.date));
+        
+        grid.innerHTML = sortedRatings.map(r => `
+          <div class="testimonial-card">
+            <div class="testimonial-header">
+              <div class="testimonial-avatar">${getInitials(r.patientName)}</div>
+              <div>
+                <div class="testimonial-name">${r.patientName || 'Anonymous'} ${r.verified ? '<i class="fas fa-check-circle" style="color:#28a745; font-size:0.8rem;" title="Verified Patient"></i>' : ''}</div>
+                <div class="testimonial-date">${formatDate(r.date)}</div>
+              </div>
+            </div>
+            <div class="star-rating">
+              ${getStars(r.rating)}
+            </div>
+            <p class="testimonial-text">${r.review}</p>
+          </div>
+        `).join('');
+      }
+
+      function formatDate(dateStr) {
+        if (!dateStr) return 'Unknown date';
+        const date = new Date(dateStr);
+        const now = new Date();
+        const diffTime = Math.abs(now - date);
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        
+        if (diffDays <= 1) return 'Today';
+        if (diffDays <= 7) return `${diffDays} days ago`;
+        if (diffDays <= 30) return `${Math.floor(diffDays / 7)} weeks ago`;
+        if (diffDays <= 365) return `${Math.floor(diffDays / 30)} months ago`;
+        return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+      }
+
+      // Load testimonials on page load
+      loadTestimonials();
+
+      // Listen for storage changes (if database updates from another tab)
+      window.addEventListener('storage', function(e) {
+        if (e.key === 'physioDatabase') {
+          loadTestimonials();
+        }
+      });
+
       // DOM Elements
       const navLinks = document.querySelectorAll('#navLinks a');
       const navIndicator = document.getElementById('navIndicator');
@@ -1035,16 +1070,18 @@
       // Function to update indicator position
       function updateIndicator(activeLink) {
         if (!activeLink || window.innerWidth <= 768) {
-          navIndicator.style.opacity = '0';
+          if (navIndicator) navIndicator.style.opacity = '0';
           return;
         }
         
         const linkRect = activeLink.getBoundingClientRect();
         const containerRect = navLinksContainer.getBoundingClientRect();
         
-        navIndicator.style.opacity = '1';
-        navIndicator.style.width = linkRect.width + 'px';
-        navIndicator.style.left = (linkRect.left - containerRect.left) + 'px';
+        if (navIndicator) {
+          navIndicator.style.opacity = '1';
+          navIndicator.style.width = linkRect.width + 'px';
+          navIndicator.style.left = (linkRect.left - containerRect.left) + 'px';
+        }
       }
 
       // Set active link and update indicator
@@ -1074,59 +1111,61 @@
       }
 
       // Click handler for logo - scroll to home
-      logoArea.addEventListener('click', function(e) {
-        e.preventDefault();
-        setActiveLink('home');
-        scrollToSection('home');
-        
-        // Close mobile menu if open
-        if (navMenu.classList.contains('active')) {
-          navMenu.classList.remove('active');
-          const icon = mobileToggle.querySelector('i');
-          icon.classList.remove('fa-times');
-          icon.classList.add('fa-bars');
-        }
-      });
+      if (logoArea) {
+        logoArea.addEventListener('click', function(e) {
+          e.preventDefault();
+          setActiveLink('home');
+          scrollToSection('home');
+          
+          // Close mobile menu if open
+          if (navMenu && navMenu.classList.contains('active')) {
+            navMenu.classList.remove('active');
+            const icon = mobileToggle.querySelector('i');
+            icon.classList.remove('fa-times');
+            icon.classList.add('fa-bars');
+          }
+        });
+      }
 
       // Click handler for navigation
       navLinks.forEach(link => {
         link.addEventListener('click', function(e) {
-            // Check if this is an external link (login page)
-            const href = this.getAttribute('href');
-            if (href && href.endsWith('.html')) {
-                // Let the browser handle this naturally
-                return;
-            }
-            
-            e.preventDefault();
-            const sectionId = this.getAttribute('data-section');
-            
-            if (!sectionId) return;
-            
-            // Update active state
-            setActiveLink(sectionId);
-            
-            // Scroll to section
-            scrollToSection(sectionId);
-            
-            // Close mobile menu if open
-            if (navMenu.classList.contains('active')) {
-                navMenu.classList.remove('active');
-                const icon = mobileToggle.querySelector('i');
-                icon.classList.remove('fa-times');
-                icon.classList.add('fa-bars');
-            }
+          // Check if this is an external link (login page)
+          const href = this.getAttribute('href');
+          if (href && href.endsWith('.html')) {
+            // Let the browser handle this naturally
+            return;
+          }
+          
+          e.preventDefault();
+          const sectionId = this.getAttribute('data-section');
+          
+          if (!sectionId) return;
+          
+          // Update active state
+          setActiveLink(sectionId);
+          
+          // Scroll to section
+          scrollToSection(sectionId);
+          
+          // Close mobile menu if open
+          if (navMenu && navMenu.classList.contains('active')) {
+            navMenu.classList.remove('active');
+            const icon = mobileToggle.querySelector('i');
+            icon.classList.remove('fa-times');
+            icon.classList.add('fa-bars');
+          }
         });
-    });
+      });
 
-      // Click handler for "Start your recovery" button with scroll animation
+      // Click handler for "Start your recovery" button
       const scrollButtons = document.querySelectorAll('.scroll-btn');
       scrollButtons.forEach(btn => {
         btn.addEventListener('click', function(e) {
           e.preventDefault();
           const targetId = this.getAttribute('href').substring(1);
           
-          // Add a quick pulse animation before scrolling
+          // Add a quick pulse animation
           this.style.transform = 'scale(0.95)';
           setTimeout(() => {
             this.style.transform = 'scale(1.05)';
@@ -1138,98 +1177,91 @@
           // Update active state
           setActiveLink(targetId);
           
-          // Scroll to contact section
+          // Scroll to section
           setTimeout(() => {
             scrollToSection(targetId);
           }, 300);
         });
       });
 
-      // Contact form submission handler
-      contactForm.addEventListener('submit', function(e) {
-        e.preventDefault();
-        
-        // Show loading state
-        submitBtn.disabled = true;
-        submitBtn.textContent = 'Sending...';
-        formMessage.style.display = 'none';
-        formMessage.className = 'form-message';
-        
-        // Create FormData object
-        const formData = new FormData(contactForm);
-        
-        // Send the form using fetch API
-        fetch(contactForm.action, {
-          method: 'POST',
-          body: formData,
-          headers: {
-            'Accept': 'application/json'
-          }
-        })
-        .then(response => {
-          if (response.ok) {
-            // Success
+      // Contact form submission
+      if (contactForm) {
+        contactForm.addEventListener('submit', function(e) {
+          e.preventDefault();
+          
+          // Show loading state
+          submitBtn.disabled = true;
+          submitBtn.textContent = 'Sending...';
+          formMessage.style.display = 'none';
+          formMessage.className = 'form-message';
+          
+          // Create FormData object
+          const formData = new FormData(contactForm);
+          
+          // Send the form using fetch API
+          fetch(contactForm.action, {
+            method: 'POST',
+            body: formData,
+            headers: {
+              'Accept': 'application/json'
+            }
+          })
+          .then(response => {
+            if (response.ok) {
+              formMessage.className = 'form-message success';
+              formMessage.textContent = '✓ Thank you! Your message has been sent successfully. We will get back to you within 24 hours.';
+              formMessage.style.display = 'block';
+              contactForm.reset();
+              formMessage.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            } else {
+              throw new Error('Network response was not ok');
+            }
+          })
+          .catch(error => {
+            console.log('Fetch failed, using traditional submit:', error);
             formMessage.className = 'form-message success';
-            formMessage.textContent = '✓ Thank you! Your message has been sent successfully. We will get back to you within 24 hours.';
+            formMessage.textContent = '✓ Thank you! Your message has been sent. We will get back to you soon.';
             formMessage.style.display = 'block';
             contactForm.reset();
-            
-            // Scroll to the message
-            formMessage.scrollIntoView({ behavior: 'smooth', block: 'center' });
-          } else {
-            throw new Error('Network response was not ok');
-          }
-        })
-        .catch(error => {
-          // Error - still submit the form traditionally as fallback
-          console.log('Fetch failed, using traditional submit:', error);
-          formMessage.className = 'form-message success';
-          formMessage.textContent = '✓ Thank you! Your message has been sent. We will get back to you soon.';
-          formMessage.style.display = 'block';
-          contactForm.reset();
-          
-          // Traditional submit as fallback
-          setTimeout(() => {
-            contactForm.submit();
-          }, 500);
-        })
-        .finally(() => {
-          // Reset button state
-          submitBtn.disabled = false;
-          submitBtn.textContent = 'Send message';
-          
-          // Hide success message after 8 seconds
-          setTimeout(() => {
-            formMessage.style.display = 'none';
-          }, 8000);
+            setTimeout(() => {
+              contactForm.submit();
+            }, 500);
+          })
+          .finally(() => {
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Send message';
+            setTimeout(() => {
+              formMessage.style.display = 'none';
+            }, 8000);
+          });
         });
-      });
+      }
 
       // Mobile menu toggle
-      mobileToggle.addEventListener('click', () => {
-        navMenu.classList.toggle('active');
-        const icon = mobileToggle.querySelector('i');
-        if (navMenu.classList.contains('active')) {
-          icon.classList.remove('fa-bars');
-          icon.classList.add('fa-times');
-        } else {
-          icon.classList.remove('fa-times');
-          icon.classList.add('fa-bars');
-        }
-      });
+      if (mobileToggle) {
+        mobileToggle.addEventListener('click', () => {
+          navMenu.classList.toggle('active');
+          const icon = mobileToggle.querySelector('i');
+          if (navMenu.classList.contains('active')) {
+            icon.classList.remove('fa-bars');
+            icon.classList.add('fa-times');
+          } else {
+            icon.classList.remove('fa-times');
+            icon.classList.add('fa-bars');
+          }
+        });
+      }
 
-      // Scroll spy - update active link based on scroll position
+      // Scroll spy
       function onScroll() {
         let currentSection = 'home';
         const scrollPosition = window.scrollY + 200;
         const windowHeight = window.innerHeight;
         const documentHeight = document.documentElement.scrollHeight;
 
-        // Check if scrolled to bottom of page
         if (window.scrollY + windowHeight >= documentHeight - 50) {
           currentSection = 'contact';
         } else {
-          // Check all sections from bottom to top
           const sectionIds = ['contact', 'testimonials', 'about', 'services', 'home'];
           for (const id of sectionIds) {
             const section = document.getElementById(id);
@@ -1243,7 +1275,6 @@
           }
         }
 
-        // Update active link without scrolling
         navLinks.forEach(link => {
           link.classList.remove('active');
           if (link.getAttribute('data-section') === currentSection) {
@@ -1276,37 +1307,32 @@
         const activeLink = document.querySelector('#navLinks a.active');
         if (activeLink) {
           updateIndicator(activeLink);
-        } else {
+        } else if (navIndicator) {
           navIndicator.style.opacity = '0';
         }
       });
 
       // Initial setup
       function init() {
-        // Set initial active link
         const initialActive = document.querySelector('#navLinks a.active');
         if (initialActive) {
           updateIndicator(initialActive);
         }
         
-        // Trigger scroll animations on load
         handleScrollAnimations();
         
-        // Handle hash in URL
         if (window.location.hash) {
           const targetId = window.location.hash.substring(1);
           setActiveLink(targetId);
           setTimeout(() => scrollToSection(targetId), 100);
         }
         
-        // Ensure Home is active initially
         setActiveLink('home');
       }
 
-      // Run initialization
       init();
 
-      // Adjust viewport height for mobile browsers
+      // Adjust viewport height for mobile
       function setVhVariable() {
         let vh = window.innerHeight * 0.01;
         document.documentElement.style.setProperty('--vh', `${vh}px`);

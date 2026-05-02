@@ -353,7 +353,7 @@
     <div class="auth-sidebar">
       <i class="fas fa-heartbeat"></i>
       <h2>The Good Physio</h2>
-      <p>Your trusted partner in recovery. Join our community and start your journey to better health.</p>
+      <p>Where Passion meets Expertise.</p>
     </div>
 
     <!-- Form Area -->
@@ -533,46 +533,44 @@
   </div>
 
   <script>
-    // Load database
-    function loadDatabase() {
-      const stored = localStorage.getItem('physioDatabase');
-      if (stored) {
-        return JSON.parse(stored);
+    // Database API calls
+    async function fetchDatabase() {
+      try {
+        const response = await fetch('/api/database');
+        return await response.json();
+      } catch (error) {
+        console.error('Failed to fetch database:', error);
+        return null;
       }
-      return fetch('data.json')
-        .then(res => res.json())
-        .then(data => {
-          localStorage.setItem('physioDatabase', JSON.stringify(data));
-          return data;
-        })
-        .catch(() => {
-          const defaultDB = {
-            users: [
-              { id: "DOC001", email: "dr.smith@goodphysio.com", password: "doctor123", name: "Dr. Sarah Smith", role: "doctor", specialization: "Sports Rehabilitation", license: "PT-2020-45678", created: "2025-01-15" },
-              { id: "DOC002", email: "dr.jones@goodphysio.com", password: "doctor456", name: "Dr. Michael Jones", role: "doctor", specialization: "Neurological Physiotherapy", license: "PT-2019-32145", created: "2025-02-01" },
-              { id: "PAT001", email: "maria@email.com", password: "patient123", role: "patient", surname: "Garcia", firstname: "Maria", middlename: "Santos", age: "34", birthdate: "1992-03-15", address: "123 Rizal St., San Pedro, Laguna", phone: "+63 912 345 6789", sex: "Female", occupation: "Teacher", emergencyContact: { name: "Juan Garcia", phone: "+63 917 111 2222", relationship: "Spouse" }, medicalHistory: [], created: "2025-03-10" }
-            ],
-            appointments: [],
-            posts: [],
-            availableSlots: ["09:00", "10:00", "11:00", "13:00", "14:00", "15:00", "16:00", "17:00"]
-          };
-          localStorage.setItem('physioDatabase', JSON.stringify(defaultDB));
-          return defaultDB;
+    }
+
+    async function saveDatabase(DB) {
+      try {
+        await fetch('/api/database', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(DB)
         });
+      } catch (error) {
+        console.error('Failed to save database:', error);
+      }
     }
 
     let DB = null;
-
-    (async function() {
-      const result = await loadDatabase();
-      DB = result.then ? await result : result;
-    })();
-
-    function saveDatabase() {
-      localStorage.setItem('physioDatabase', JSON.stringify(DB));
-    }
-
     let selectedRole = '';
+
+    // Load database on page load
+    (async function() {
+      DB = await fetchDatabase();
+      if (!DB) {
+        // Load from localStorage as fallback
+        const stored = localStorage.getItem('physioDatabase');
+        if (stored) {
+          DB = JSON.parse(stored);
+        }
+      }
+      console.log('Database loaded:', DB ? Object.keys(DB) : 'null');
+    })();
 
     function switchTab(tab) {
       document.getElementById('loginTab').classList.toggle('active', tab === 'login');
@@ -589,38 +587,64 @@
       document.querySelectorAll('.role-card').forEach(card => card.classList.remove('selected'));
       document.getElementById(role + 'RoleCard').classList.add('selected');
       document.getElementById('doctorFields').classList.toggle('show', role === 'doctor');
-      document.getElementById('patientFields').classList.toggle('show', role === 'patient');
     }
 
-    function handleLogin(event) {
+    async function handleLogin(event) {
       event.preventDefault();
       const email = document.getElementById('loginEmail').value.trim();
       const password = document.getElementById('loginPassword').value.trim();
       const role = document.getElementById('loginRole').value;
       const messageEl = document.getElementById('loginMessage');
       
-      if (!DB) { showMessage(messageEl, 'Database loading... Please try again.', 'error'); return; }
+      // Reload DB if needed
+      if (!DB) {
+        DB = await fetchDatabase();
+      }
+      
+      if (!DB || !DB.users) {
+        showMessage(messageEl, 'Database not loaded. Please refresh the page.', 'error');
+        return;
+      }
       
       const user = DB.users.find(u => u.email === email && u.password === password && u.role === role);
       
       if (user) {
-        showMessage(messageEl, 'Login successful! Redirecting...', 'success');
-        localStorage.setItem('physioLoggedInUser', JSON.stringify(user));
-        setTimeout(() => { window.location.href = 'dashboard.html'; }, 1000);
+        showMessage(messageEl, '✓ Login successful! Redirecting...', 'success');
+        
+        // Store user data
+        sessionStorage.setItem('physioLoggedInUser', JSON.stringify(user));
+        console.log('User saved to session:', user.id, user.name);
+        
+        // Save database to localStorage as backup
+        localStorage.setItem('physioDatabase', JSON.stringify(DB));
+        
+        // Redirect to dashboard
+        setTimeout(() => { 
+          window.location.href = 'dashboard.html';
+        }, 500);
       } else {
-        showMessage(messageEl, 'Invalid credentials or role. Please try again.', 'error');
+        showMessage(messageEl, '❌ Invalid credentials or role. Please try again.', 'error');
       }
     }
 
-    function handleRegister(event) {
+    async function handleRegister(event) {
       event.preventDefault();
       const role = document.getElementById('regRole').value;
       const email = document.getElementById('regEmail').value.trim();
       const password = document.getElementById('regPassword').value.trim();
       const messageEl = document.getElementById('registerMessage');
       
-      if (!role) { showMessage(messageEl, 'Please select a role (Patient or Doctor).', 'error'); return; }
-      if (!DB) { showMessage(messageEl, 'Database loading... Please try again.', 'error'); return; }
+      if (!role) { showMessage(messageEl, 'Please select a role.', 'error'); return; }
+      
+      if (!DB) {
+        DB = await fetchDatabase();
+      }
+      
+      if (!DB || !DB.users) {
+        showMessage(messageEl, 'Database not loaded. Please refresh.', 'error');
+        return;
+      }
+      
       if (DB.users.find(u => u.email === email && email !== '')) {
         showMessage(messageEl, 'An account with this email already exists.', 'error');
         return;
@@ -628,13 +652,10 @@
       
       const prefix = role === 'doctor' ? 'DOC' : 'PAT';
       const idNumber = String(DB.users.filter(u => u.role === role).length + 1).padStart(3, '0');
-      const userId = prefix + idNumber;
       
       const newUser = {
-        id: userId,
-        email: email,
-        password: password,
-        role: role,
+        id: prefix + idNumber,
+        email, password, role,
         surname: document.getElementById('regSurname').value.trim(),
         firstname: document.getElementById('regFirstname').value.trim(),
         middlename: document.getElementById('regMiddlename').value.trim(),
@@ -653,7 +674,6 @@
         created: new Date().toISOString().split('T')[0]
       };
       
-      // Build display name
       newUser.name = [newUser.firstname, newUser.middlename, newUser.surname].filter(Boolean).join(' ');
       
       if (role === 'doctor') {
@@ -662,9 +682,12 @@
       }
       
       DB.users.push(newUser);
-      saveDatabase();
+      await saveDatabase(DB);
       
-      showMessage(messageEl, 'Account created successfully! Redirecting to login...', 'success');
+      // Also save to localStorage
+      localStorage.setItem('physioDatabase', JSON.stringify(DB));
+      
+      showMessage(messageEl, '✓ Account created! Redirecting to login...', 'success');
       event.target.reset();
       document.querySelectorAll('.role-card').forEach(card => card.classList.remove('selected'));
       document.getElementById('doctorFields').classList.remove('show');
