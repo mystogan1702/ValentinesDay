@@ -1091,24 +1091,33 @@
       // Click handler for navigation
       navLinks.forEach(link => {
         link.addEventListener('click', function(e) {
-          e.preventDefault();
-          const sectionId = this.getAttribute('data-section');
-          
-          // Update active state
-          setActiveLink(sectionId);
-          
-          // Scroll to section
-          scrollToSection(sectionId);
-          
-          // Close mobile menu if open
-          if (navMenu.classList.contains('active')) {
-            navMenu.classList.remove('active');
-            const icon = mobileToggle.querySelector('i');
-            icon.classList.remove('fa-times');
-            icon.classList.add('fa-bars');
-          }
+            // Check if this is an external link (login page)
+            const href = this.getAttribute('href');
+            if (href && href.endsWith('.html')) {
+                // Let the browser handle this naturally
+                return;
+            }
+            
+            e.preventDefault();
+            const sectionId = this.getAttribute('data-section');
+            
+            if (!sectionId) return;
+            
+            // Update active state
+            setActiveLink(sectionId);
+            
+            // Scroll to section
+            scrollToSection(sectionId);
+            
+            // Close mobile menu if open
+            if (navMenu.classList.contains('active')) {
+                navMenu.classList.remove('active');
+                const icon = mobileToggle.querySelector('i');
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+            }
         });
-      });
+    });
 
       // Click handler for "Start your recovery" button with scroll animation
       const scrollButtons = document.querySelectorAll('.scroll-btn');
